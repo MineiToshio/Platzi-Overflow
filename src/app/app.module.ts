@@ -21,6 +21,8 @@ import { QuestionFormComponent } from './question/question-form.component';
 import { MomentModule } from 'ngx-moment';
 import 'moment/locale/es';
 
+import { Routing } from './app.routing';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +39,8 @@ import 'moment/locale/es';
     MaterialModule,
     MomentModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Routing
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -12,7 +12,9 @@
     <input [type]="hide ? 'password' : 'text'" matInput placeholder="Contraseña" formControlName="password" id="password">
     <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off' }}</mat-icon>
   </mat-form-field>
-  <button type="submit" mat-raised-button color="accent">
-    Registrarse
-  </button>
+  <button type="submit" mat-raised-button color="accent">Registrarse</button>
+  <p style="text-align: center">
+    ¿Ya tienes un usuario?
+    <a mat-button color="primary" [routerLink]="['/signin']">Iniciar sesión</a>
+  </p>
 </form>
