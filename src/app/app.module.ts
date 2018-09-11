@@ -18,6 +18,8 @@ import { SignupScreenComponent } from './auth/signup-screen.component';
 import { QuestionListComponent } from './question/question-list.component';
 import { QuestionFormComponent } from './question/question-form.component';
 
+import { AuthService } from './auth/auth.service';
+
 //Moment
 import { MomentModule } from 'ngx-moment';
 import 'moment/locale/es';
@@ -44,7 +46,7 @@ import { Routing } from './app.routing';
     Routing,
     HttpModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

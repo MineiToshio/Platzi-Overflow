@@ -1,9 +1,11 @@
 import express from 'express'
-import { question } from './routes'
+import bodyParser from 'body-parser'
+import { question, auth } from './routes'
 
 const app = express() //express devuelve en una variable el servidor
 
-console.log(process.env.NODE_ENV)
+app.use(bodyParser.json()) //poder leer todo lo que viene en formato json del cliente
+app.use(bodyParser.urlencoded({ extended: true })) //poder leer todo lo que viene en formato utf-8
 
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
@@ -15,5 +17,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/questions', question)
+app.use('/api/auth', auth)
 
 export default app
