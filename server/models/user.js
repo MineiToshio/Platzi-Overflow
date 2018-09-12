@@ -10,4 +10,10 @@ const UserSchema = new Schema({
 
 UserSchema.plugin(uniqueValidator)
 
+UserSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+}
+
 export default mongoose.model('User', UserSchema)

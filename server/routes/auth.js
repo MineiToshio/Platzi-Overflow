@@ -1,25 +1,24 @@
 import express from 'express'
+import Debug from 'debug'
 import jwt from 'jsonwebtoken'
 import { secret } from '../config'
-import { findUserByEmail, users } from '../middleware'
-import Debug from 'debug'
+import { User } from '../models'
+import { hashSync as hash, compareSync as comparePasswords } from 'bcryptjs'
 
 const app = express.Router()
 const debug = new Debug('platzi-overflow:auth')
 
-const comparePasswords = (providedPassword, userPassword) => providedPassword === userPassword
-
-app.post('/signin', (req, res, next) => {
+app.post('/signin', async (req, res, next) => {
   const { email, password } = req.body
-  const user = findUserByEmail(email)
+  const user = await User.findOne({email})
 
   if(!user) {
-    return handleLoginFailes(res)
+    return handleLoginFailed(res)
   }
 
   if(!comparePasswords(password, user.password)) {
     debug(`Passwords do not match: ${password} !== ${user.password}`)
-    return handleLoginFailes(res, 'El correo y la contraseña no coinciden')
+    return handleLoginFailed(res, 'El correo y la contraseña no coinciden')
   }
 
   const token = createToken(user)
@@ -34,17 +33,16 @@ app.post('/signin', (req, res, next) => {
 })
 
 // /api/auth/signup
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
   const { firstName, lastName, email, password } = req.body
-  const user = {
-    _id: +new Date(),
+  const u = new User({
     firstName,
     lastName,
     email,
-    password
-  }
-  debug(`Creating new user: ${user}`)
-  users.push(user)
+    password: hash(password, 10)
+  })
+  debug(`Creating new user: ${u}`)
+  const user = await u.save()
   const token = createToken(user)
   res.status(201).json({
     message: 'User saved',
@@ -58,9 +56,9 @@ app.post('/signup', (req, res) => {
 
 const createToken = (user) => jwt.sign({ user }, secret, { expiresIn: 86400 })
 
-const handleLoginFailes = (res, message) => {
+const handleLoginFailed = (res, message) => {
   res.status(401).json({
-    message: 'Login failes',
+    message: 'Login failed',
     error: message || 'Email and password don\'t match'
   })
 }
